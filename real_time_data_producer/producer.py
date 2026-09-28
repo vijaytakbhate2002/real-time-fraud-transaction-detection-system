@@ -46,6 +46,8 @@ def parse_args(path:Path):
 def main():
 
     args = parse_args(RAW_INPUT)
+    print("Starting Kafka producer with the following parameters:")
+    print(f"  Dataset: {args.dataset}")
     if args.interval < 0:
         raise SystemExit("--interval must be zero or greater")
     if not args.dataset.is_file():
