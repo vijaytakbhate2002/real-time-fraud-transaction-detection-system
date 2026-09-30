@@ -15,7 +15,13 @@ The goal is to transform raw transaction history into a streaming architecture t
 
 This repository is in an active development phase. The project has moved from planning into a working local streaming foundation.
 
-### Development Update — 2026-09-28
+### Development Update ? 2026-09-30
+
+- Tuned the Kafka producer rate and Spark's `maxOffsetsPerTrigger` to find a working balance: the producer sent 2,000 records per second while Spark processed batches capped at 10,000 offsets.
+- Spark kept up with the stream and wrote the processed data to Parquet.
+- Processed nearly 300,000 data points, which will be used to train the machine-learning model in the next step.
+
+### Development Update ? 2026-09-28
 
 - Configured a local Kafka broker using Docker in [fraud_streaming/kafka/docker-compose.yml](fraud_streaming/kafka/docker-compose.yml)
 - Added a transaction replay producer that reads the CSV dataset and publishes rows to the `transaction-stream` topic in [real_time_data_producer/producer.py](real_time_data_producer/producer.py)
