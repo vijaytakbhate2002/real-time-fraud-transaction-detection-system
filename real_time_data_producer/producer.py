@@ -27,8 +27,8 @@ def parse_args(path:Path):
     parser.add_argument(
         "--interval",
         type=float,
-        default=1.0,
-        help="Seconds to wait between rows (default: 1)",
+        default=0.0005,
+        help="Seconds to wait between rows (default: 0.01)",
     )
     parser.add_argument(
         "--topic",
