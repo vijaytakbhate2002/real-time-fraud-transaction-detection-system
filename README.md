@@ -15,6 +15,14 @@ The goal is to transform raw transaction history into a streaming architecture t
 
 This repository is in an active development phase. The project has moved from planning into a working local streaming foundation.
 
+### Development Update — 2026-10-03
+
+- Integrated Redis with the Spark streaming flow and completed an initial end-to-end integration test.
+- Streamed transaction cases with `producer.py` using a 1-second delay, processed the real-time data, and stored the basic metrics `batch_id`, `total_records`, and `fraud_count` in Redis.
+- Checked the values with `HGETALL fraud:metrics:latest` and confirmed that the metrics updated as expected.
+- This was a flow and integration check. `fraud_count` is included only for this experiment; in the production-ready flow it should be written to Redis after model prediction, rather than before prediction.
+- Next, compute the required metrics and store them in Redis, and update the fraud-count handling to follow the post-prediction flow.
+
 ### Development Update ? 2026-09-30
 
 - Tuned the Kafka producer rate and Spark's `maxOffsetsPerTrigger` to find a working balance: the producer sent 2,000 records per second while Spark processed batches capped at 10,000 offsets.
