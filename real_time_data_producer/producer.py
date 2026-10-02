@@ -12,6 +12,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from config import RAW_INPUT
+START_INDEX = 311360
 
 
 def parse_args(path:Path):
@@ -27,7 +28,7 @@ def parse_args(path:Path):
     parser.add_argument(
         "--interval",
         type=float,
-        default=0.0005,
+        default=1,
         help="Seconds to wait between rows (default: 0.01)",
     )
     parser.add_argument(
@@ -64,7 +65,9 @@ def main():
             if rows.fieldnames is None:
                 raise SystemExit("Dataset is empty or missing a CSV header")
 
-            for row in rows:
+            for row_index, row in enumerate(rows):
+                if row_index < START_INDEX:
+                    continue
                 if sent_count and args.interval:
                     time.sleep(args.interval)
                 producer.send(args.topic, value=row)
