@@ -23,10 +23,10 @@ def write_to_parquet(transactions_df, batch_id):
     print(f"Processed and wrote batch {batch_id}")
 
 
-def write_metrics_to_redis(batch_df, batch_id):
+def write_transactions_to_redis(batch_df):
     redis_store = RedisIntegration(host=redis_host, port=redis_port)
     try:
-        redis_store.write_metrics_to_redis(batch_df, batch_id)
+        redis_store.write_transactions_to_redis(batch_df)
     finally:
         redis_store.close()
 
@@ -85,5 +85,4 @@ def process_and_write_batch(batch_df, batch_id):
         )
 
     write_to_parquet(transactions_df, batch_id)
-    write_metrics_to_redis(cleaned_transactions_df, batch_id)
-
+    write_transactions_to_redis(transactions_df)

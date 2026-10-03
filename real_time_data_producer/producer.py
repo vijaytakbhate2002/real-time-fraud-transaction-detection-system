@@ -12,7 +12,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from config import RAW_INPUT
-START_INDEX = 311360
+START_INDEX = 311552
 
 
 def parse_args(path:Path):
