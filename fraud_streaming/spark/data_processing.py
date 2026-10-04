@@ -1,7 +1,15 @@
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pyspark.sql.functions as F
+from pyspark.sql.types import (
+    DoubleType,
+    IntegerType,
+    StringType,
+    StructField,
+    StructType,
+)
 from config import processed_data_path
 
 try:
@@ -86,3 +94,65 @@ def process_and_write_batch(batch_df, batch_id):
 
     write_to_parquet(transactions_df, batch_id)
     write_transactions_to_redis(transactions_df)
+
+
+# Now let's build a function to compute analytical insights from the processed data. So basically we will be reading data from redis and then computing some insights from it to show it on graphana dashboard.
+
+
+def compute_window_analytics(spark, transactions):
+    """Calculate dashboard metrics over the transactions currently in Redis."""
+    from fraud_streaming.redis.config import WINDOW_TIME
+
+    schema = StructType(
+        [
+            StructField("amt", DoubleType(), True),
+            StructField("is_fraud", IntegerType(), True),
+            StructField("category", StringType(), True),
+        ]
+    )
+    rows = [
+        (
+            float(transaction["amt"]) if transaction.get("amt") is not None else None,
+            int(transaction["is_fraud"])
+            if transaction.get("is_fraud") is not None
+            else None,
+            (transaction.get("category") or "unknown").strip().lower() or "unknown",
+        )
+        for transaction in transactions
+    ]
+    transactions_df = spark.createDataFrame(rows, schema)
+
+    aggregate = transactions_df.agg(
+        F.count("*").alias("transaction_count"),
+        F.sum("amt").alias("total_amount"),
+        F.avg("amt").alias("average_amount"),
+        F.sum(F.when(F.col("is_fraud") == 1, 1).otherwise(0)).alias("fraud_count"),
+    ).first()
+    transaction_count = int(aggregate["transaction_count"] or 0)
+    total_amount = float(aggregate["total_amount"] or 0.0)
+    average_amount = float(aggregate["average_amount"] or 0.0)
+    fraud_count = int(aggregate["fraud_count"] or 0)
+    category_counts = {
+        row["category"]: int(row["category_count"])
+        for row in transactions_df.groupBy("category")
+        .count()
+        .withColumnRenamed("count", "category_count")
+        .collect()
+    }
+    window_end = datetime.now(timezone.utc)
+
+    return {
+        "transaction_count": transaction_count,
+        "total_amount": round(total_amount, 2),
+        "average_amount": round(average_amount, 2),
+        # "fraud_count": fraud_count,
+        # "fraud_rate": (
+        #     round(fraud_count / transaction_count, 6) if transaction_count else 0.0
+        # ),
+        "category_counts": category_counts,
+        "window_start": (
+            window_end - timedelta(minutes=WINDOW_TIME)
+        ).isoformat(timespec="seconds"),
+        "window_end": window_end.isoformat(timespec="seconds"),
+        "updated_at": window_end.isoformat(timespec="seconds"),
+    }

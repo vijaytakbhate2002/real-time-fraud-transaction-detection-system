@@ -15,6 +15,12 @@ The goal is to transform raw transaction history into a streaming architecture t
 
 This repository is in an active development phase. The project has moved from planning into a working local streaming foundation.
 
+### Development Update — 2026-10-04
+
+- Added a separate Spark streaming session in `fraud_streaming/spark/feature_analysis.ipynb` to periodically read the current feature-store window from Redis and compute analytical metrics.
+- Added a dedicated Redis analytics client to store the latest computed metrics for Grafana.
+- Completed the Grafana and Redis configuration. The next step is to build the Grafana dashboard using the published metrics.
+
 ### Development Update — 2026-10-03
 
 - Integrated Redis with the Spark streaming flow and completed an initial end-to-end integration test.

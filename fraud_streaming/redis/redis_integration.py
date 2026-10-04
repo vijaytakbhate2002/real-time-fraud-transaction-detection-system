@@ -53,3 +53,59 @@ class RedisIntegration:
 
     def close(self):
         self.redis_client.close()
+
+
+class RedisAnalyticsIntegration:
+    def __init__(self, host="localhost", port=6379, db=0, analytics_db=None):
+        self.feature_store_client = redis.Redis(
+            host=host,
+            port=port,
+            db=db,
+            decode_responses=True,
+        )
+        self.analytics_client = redis.Redis(
+            host=host,
+            port=port,
+            db=db if analytics_db is None else analytics_db,
+            decode_responses=True,
+        )
+
+    def read_feature_store(self):
+        """Read transaction JSON values still inside the configured window."""
+        from fraud_streaming.redis.config import (
+            FEATURE_STORE_INDEX_KEY,
+            FEATURE_STORE_KEY_PREFIX,
+            WINDOW_TIME,
+        )
+
+        cutoff_ms = int(datetime.now(timezone.utc).timestamp() * 1000) - (
+            WINDOW_TIME * 60 * 1000
+        )
+        transaction_keys = self.feature_store_client.zrangebyscore(
+            FEATURE_STORE_INDEX_KEY, cutoff_ms, "+inf"
+        )
+        if not transaction_keys:
+            return []
+
+        values = self.feature_store_client.mget(transaction_keys)
+        return [
+            json.loads(value)
+            for key, value in zip(transaction_keys, values)
+            if value is not None and key.startswith(FEATURE_STORE_KEY_PREFIX)
+        ]
+
+    def write_analytics_to_redis(self, metrics):
+        """Publish the latest window metrics as a Redis hash."""
+        from fraud_streaming.redis.config import ANALYTICS_METRICS_KEY
+
+        mapping = {
+            key: json.dumps(value, separators=(",", ":"))
+            if isinstance(value, (dict, list))
+            else str(value)
+            for key, value in metrics.items()
+        }
+        self.analytics_client.hset(ANALYTICS_METRICS_KEY, mapping=mapping)
+
+    def close(self):
+        self.feature_store_client.close()
+        self.analytics_client.close()

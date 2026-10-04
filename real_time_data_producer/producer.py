@@ -11,7 +11,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from config import RAW_INPUT
+RAW_INPUT = "data/raw_input/credit_card_transactions.csv"
 START_INDEX = 311552
 
 
