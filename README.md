@@ -12,6 +12,20 @@
 
 The project uses Python, Kafka, Docker, PySpark, Pandas, Redis, and Jupyter notebooks for transaction ingestion, stream processing, analytics, and feature selection. Grafana is part of the planned metrics dashboard workflow. Model training and online inference are upcoming stages.
 
+## Contents
+
+- [Overview](#overview)
+- [Current Development Status](#current-development-status)
+- [High-Level Architecture](#high-level-architecture)
+- [Project Workflow](#project-workflow)
+- [Repository Structure](#repository-structure)
+- [Prerequisites](#prerequisites)
+- [Local Setup](#local-setup)
+- [Kafka Management Commands](#kafka-management-commands)
+- [Tools & Skills](#tools--skills)
+- [Notes](#notes)
+- [Next Milestones](#next-milestones)
+
 ---
 
 ## Overview
@@ -29,20 +43,27 @@ The goal is to transform raw transaction history into a streaming architecture t
 
 This repository is in an active development phase. The project has moved from planning into a working local streaming foundation.
 
-### Development Update - 2026-10-07
+<details open>
+<summary><strong>Development Update - 2026-10-07</strong></summary>
 
 - Completed feature selection in [model_development/feature_selection.ipynb](model_development/feature_selection.ipynb) using fill-rate analysis, near-zero-variance screening, and information value (IV) filtering.
 - Evaluated 326,799 transactions across 28 columns. Fill-rate analysis found no columns below the 90% threshold; near-zero-variance screening flagged one column, and IV filtering retained 17 features at the 0.2 threshold.
 - The combined report retains 17 predictor features and the `is_fraud` target, while dropping 10 predictors. The target is preserved as the label for supervised learning.
 - Next step: use the selected predictor features for model development and training.
 
-### Development Update — 2026-10-04
+</details>
+
+<details>
+<summary><strong>Development Update - 2026-10-04</strong></summary>
 
 - Added a separate Spark streaming session in `fraud_streaming/spark/feature_analysis.ipynb` to periodically read the current feature-store window from Redis and compute analytical metrics.
 - Added a dedicated Redis analytics client to store the latest computed metrics for Grafana.
 - Completed the Grafana and Redis configuration. The next step is to build the Grafana dashboard using the published metrics.
 
-### Development Update — 2026-10-03
+</details>
+
+<details>
+<summary><strong>Development Update - 2026-10-03</strong></summary>
 
 - Integrated Redis with the Spark streaming flow and completed an initial end-to-end integration test.
 - Streamed transaction cases with `producer.py` using a 1-second delay, processed the real-time data, and stored the basic metrics `batch_id`, `total_records`, and `fraud_count` in Redis.
@@ -50,19 +71,27 @@ This repository is in an active development phase. The project has moved from pl
 - This was a flow and integration check. `fraud_count` is included only for this experiment; in the production-ready flow it should be written to Redis after model prediction, rather than before prediction.
 - Next, compute the required metrics and store them in Redis, and update the fraud-count handling to follow the post-prediction flow.
 
-### Development Update ? 2026-09-30
+</details>
+
+<details>
+<summary><strong>Development Update - 2026-09-30</strong></summary>
 
 - Tuned the Kafka producer rate and Spark's `maxOffsetsPerTrigger` to find a working balance: the producer sent 2,000 records per second while Spark processed batches capped at 10,000 offsets.
 - Spark kept up with the stream and wrote the processed data to Parquet.
 - Processed nearly 300,000 data points, which will be used to train the machine-learning model in the next step.
 
-### Development Update ? 2026-09-28
+</details>
+
+<details>
+<summary><strong>Development Update - 2026-09-28</strong></summary>
 
 - Configured a local Kafka broker using Docker in [fraud_streaming/kafka/docker-compose.yml](fraud_streaming/kafka/docker-compose.yml)
 - Added a transaction replay producer that reads the CSV dataset and publishes rows to the `transaction-stream` topic in [real_time_data_producer/producer.py](real_time_data_producer/producer.py)
 - Defined the dataset path and runtime project configuration in [config.py](config.py)
 - Documented Kafka topic operations and cleanup steps in [commands.md](commands.md)
 - Established the project structure for upcoming stream-processing and feature-generation work
+
+</details>
 
 ### In Progress / Planned
 
@@ -127,25 +156,25 @@ The final system should score each transaction in near real time and decide whet
 
 ```text
 real_time_fraud_transaction_detection/
-├── README.md
-├── commands.md
-├── config.py
-├── execution_steps.md
-├── requirements.txt
-├── data/
-│   ├── processed/
-│   └── raw_input/
-│       └── credit_card_transactions.csv
-├── dev_env/
-├── fraud_streaming/
-│   └── kafka/
-│       └── docker-compose.yml
-├── jobs/
-│   └── fraud_streaming_job.py
-├── real_time_data_producer/
-│   └── producer.py
-├── winutils/
-└── .gitignore
+|-- README.md
+|-- commands.md
+|-- config.py
+|-- execution_steps.md
+|-- requirements.txt
+|-- data/
+|   |-- processed/
+|   `-- raw_input/
+|       `-- credit_card_transactions.csv
+|-- dev_env/
+|-- fraud_streaming/
+|   `-- kafka/
+|       `-- docker-compose.yml
+|-- jobs/
+|   `-- fraud_streaming_job.py
+|-- real_time_data_producer/
+|   `-- producer.py
+|-- winutils/
+`-- .gitignore
 ```
 
 ---
