@@ -1,5 +1,19 @@
 # Real-Time Fraud Transaction Detection
 
+## Tools & Skills
+
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-231F20?logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
+[![Apache Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?logo=apachespark&logoColor=white)](https://spark.apache.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white)](https://redis.io/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
+
+The project uses Python, Kafka, Docker, PySpark, Pandas, Redis, and Jupyter notebooks for transaction ingestion, stream processing, analytics, and feature selection. Grafana is part of the planned metrics dashboard workflow. Model training and online inference are upcoming stages.
+
+---
+
 ## Overview
 
 This project builds a real-time fraud detection pipeline for credit-card transactions. It combines:
@@ -194,20 +208,6 @@ docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhos
 
 docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic transaction-stream --partitions 1 --replication-factor 1
 ```
-
----
-
-## Tools & Skills
-
-[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-231F20?logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
-[![Apache Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?logo=apachespark&logoColor=white)](https://spark.apache.org/)
-[![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org/)
-[![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white)](https://redis.io/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
-
-The project uses Python, Kafka, Docker, PySpark, Pandas, Redis, and Jupyter notebooks for transaction ingestion, stream processing, analytics, and feature selection. Grafana is part of the planned metrics dashboard workflow. Model training and online inference are upcoming stages.
 
 ---
 
