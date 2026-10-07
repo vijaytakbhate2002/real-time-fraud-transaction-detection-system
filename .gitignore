@@ -3,3 +3,5 @@ dev_env/
 __pycache__/
 data/
 notes
+temp*
+!model_development/feature_selection_report/feature_selection_report.csv
