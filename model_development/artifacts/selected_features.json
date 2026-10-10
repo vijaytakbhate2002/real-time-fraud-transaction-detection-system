@@ -1,0 +1,19 @@
+[
+  "amt",
+  "amt_log1p",
+  "category",
+  "cc_num",
+  "city",
+  "city_pop",
+  "dob",
+  "first",
+  "job",
+  "last",
+  "merch_zipcode",
+  "merchant",
+  "state",
+  "street",
+  "transaction_hour",
+  "unix_time",
+  "zip"
+]
