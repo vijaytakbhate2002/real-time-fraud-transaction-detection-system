@@ -1,0 +1,47 @@
+{
+  "base_parameters": {
+    "n_estimators": 1500,
+    "max_depth": 6,
+    "learning_rate": 0.02,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8
+  },
+  "search_bounds": {
+    "n_estimators": [
+      1200,
+      1800
+    ],
+    "max_depth": [
+      5,
+      7
+    ],
+    "learning_rate": [
+      0.016,
+      0.024
+    ],
+    "subsample": [
+      0.64,
+      0.96
+    ],
+    "colsample_bytree": [
+      0.64,
+      0.96
+    ]
+  },
+  "best_parameters": {
+    "n_estimators": 1539,
+    "max_depth": 6,
+    "learning_rate": 0.0218049300702571,
+    "subsample": 0.8834227835614099,
+    "colsample_bytree": 0.9155095579417818
+  },
+  "validation_precision": 0.5307855626326964,
+  "validation_recall": 0.9433962264150944,
+  "baseline_validation_precision": 0.5297872340425532,
+  "baseline_validation_recall": 0.939622641509434,
+  "selection_rule": "highest precision among Pareto trials retaining baseline recall",
+  "objective_metrics": [
+    "precision",
+    "recall"
+  ]
+}

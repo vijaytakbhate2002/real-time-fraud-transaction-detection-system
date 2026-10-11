@@ -44,6 +44,17 @@ The goal is to transform raw transaction history into a streaming architecture t
 This repository is in an active development phase. The project has moved from planning into a working local streaming foundation.
 
 <details open>
+<summary><strong>Development Update - 2026-10-10</strong></summary>
+
+- Trained a baseline XGBoost model and logged its parameters, metrics, and model to MLflow. Built and tuned a challenger XGBoost model for comparison.
+- Gini or AUC are not usefull metrics for this highly imbalanced dataset my gini is around
+- Fraud represents only 0.76% of the data. Because of this imbalance, XGBoost validation uses ROC-AUC and PR-AUC (precision-recall AUC) alongside the other classification metrics PR-AUC utilizing precision for validation.
+- Increased the challenger model’s `n_estimators` from 500 to 1,500 and reduced `learning_rate` from 0.05 to 0.02. Precision improved from 49.0% to 52.9%, a gain of 3.9 percentage points.
+- At 52.9% precision, about 47.1% of predicted fraud cases are legitimate transactions, so false positives still require substantial review effort. The next tuning focus is reducing False Discovery Rate (FP / (FP + TP)) and improving precision while retaining fraud capture.
+
+</details>
+
+<details open>
 <summary><strong>Development Update - 2026-10-07</strong></summary>
 
 - Completed feature selection in [model_development/feature_selection.ipynb](model_development/feature_selection.ipynb) using fill-rate analysis, near-zero-variance screening, and information value (IV) filtering.
