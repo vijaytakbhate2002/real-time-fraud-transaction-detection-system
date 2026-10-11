@@ -44,6 +44,27 @@ The goal is to transform raw transaction history into a streaming architecture t
 This repository is in an active development phase. The project has moved from planning into a working local streaming foundation.
 
 <details open>
+<summary><strong>Development Update - 2026-10-11</strong></summary>
+
+- Optuna tuning improved challenger precision by approximately 3–4% compared with the previous model. I selected trial 20 from the precision/recall tradeoff: **56.8% validation precision** and **93.6% validation recall**.
+- Tuned XGBoost parameters recorded in [model_development.ipynb](model_development/model_development.ipynb):
+
+  | Parameter | Value |
+  |---|---:|
+  | <code>n_estimators</code> | 1,374 |
+  | <code>max_depth</code> | 6 |
+  | <code>learning_rate</code> | 0.0224645857538804 |
+  | <code>subsample</code> | 0.643516540558006 |
+  | <code>colsample_bytree</code> | 0.924602360960554 |
+
+- Track model runs and metrics in the [MLflow experiments](https://dagshub.com/vijaytakbhate2002/credit-card-fraud-transaction-model/experiments).
+- Precision and recall across all completed trials are shown below; trial 20 is selected.
+
+![Optuna validation precision and recall tradeoff by trial](readme_artifacts/output.png)
+
+</details>
+
+<details open>
 <summary><strong>Development Update - 2026-10-10</strong></summary>
 
 - Trained a baseline XGBoost model and logged its parameters, metrics, and model to MLflow. Built and tuned a challenger XGBoost model for comparison.
