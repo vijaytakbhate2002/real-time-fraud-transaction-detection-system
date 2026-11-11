@@ -27,7 +27,7 @@ def load_model():
                 "DAGSHUB_REPO_NAME", "credit-card-fraud-transaction-model"
             ),
             mlflow=True,
-        )
+        )   
         model = mlflow.sklearn.load_model(MODEL_URI)
     return model
 
@@ -41,6 +41,7 @@ except Exception as exc:
 
 @app.get("/health")
 def health():
+    
     return {"status": "ok", "model_loaded": model is not None, "model_url": MODEL_URI}
 
 
